@@ -6,6 +6,9 @@ gen_ui_input <- function(.input, .input_name) {
   if (.input$type == "numeric") {
     return(glue::glue('    numericInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value}, min = {.input$min}, max = {.input$max})'))
   }
+  if (.input$type == "text") {
+    return(glue::glue('    textInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value})'))
+  }
   if (.input$type == "checkbox") {
     return(glue::glue('    checkboxInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value})'))
   }
@@ -37,14 +40,7 @@ gen_server_reactive <- function(.input, .input_name) {
       }})
   "))
   }
-  if (.input$type == "select") {
-    return(glue::glue("
-      {.input_name} <- reactive({{
-        input${.input_name}
-      }})
-  "))
-  }
-  if (.input$type == "checkbox") {
+  if (.input$type %in% c("select", "checkbox", "text")) {
     return(glue::glue("
       {.input_name} <- reactive({{
         input${.input_name}

@@ -1,0 +1,23 @@
+module: multi
+
+is_male:
+  type: checkbox
+  label: "Male"
+  value: TRUE
+
+KpCalcMethod:
+  type: select
+  label: "Kp calculation method"
+  values:
+  - Poulin and Theil
+  - Rodgers and Rowland
+  - Berezhkovskiy
+  - Schmitt
+  - PK-Sim
+
+mol_weight:
+  type: numeric
+  label: "molecular weight"
+  value: 0.456
+  min: 0
+  max: 10

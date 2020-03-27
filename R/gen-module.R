@@ -3,10 +3,56 @@
 #' @param .input_name name for input
 #' @export
 gen_ui_input <- function(.input, .input_name) {
-  if (.input$type != "numeric") {
-    stop('only implemented for numeric inputs for now')
+  if (.input$type == "numeric") {
+    return(glue::glue('    numericInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value}, min = {.input$min}, max = {.input$max})'))
   }
-  glue::glue('    numericInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value}, min = {.input$min}, max = {.input$max})')
+  if (.input$type == "checkbox") {
+    return(glue::glue('    checkboxInput(NS(id, "{.input_name}"), "{.input$label}", {.input$value})'))
+  }
+  if (.input$type == "select") {
+    vals <- glue::glue_collapse(glue::glue('"{.input$values}" = "{.input$values}"'), sep = ",\n")
+    return(glue::glue('    selectInput(NS(id, "{.input_name}"), "{.input$label}", c(\n',
+                      vals, ')\n)'))
+  }
+  stop('type not implemented')
+}
+
+#' generate a server reactive
+#' @param .input input list
+#' @param .input_name name for input
+#' @export
+gen_server_reactive <- function(.input, .input_name) {
+  if (.input$type == "numeric") {
+    return(glue::glue("
+      {.input_name} <- reactive({{
+        in_range <- if (input${.input_name} <= {.input$max} && input${.input_name} >= {.input$min}) {
+          TRUE
+        } else {
+          FALSE
+        }
+        shinyFeedback::feedbackDanger(ns('{.input_name}'), !in_range,
+        sprintf('Numeric value between %s-%s required', {.input$min}, {.input$max}))
+        req(in_range)
+        input${.input_name}
+      }})
+  "))
+  }
+  if (.input$type == "select") {
+    return(glue::glue("
+      {.input_name} <- reactive({{
+        input${.input_name}
+      }})
+  "))
+  }
+  if (.input$type == "checkbox") {
+    return(glue::glue("
+      {.input_name} <- reactive({{
+        input${.input_name}
+      }})
+  "))
+  }
+
+  stop("unsupported type")
 }
 
 #' code generate a module
@@ -34,21 +80,7 @@ generate_module <- function(.mt) {
     ), sep = "\n"
   )
 
-  gen_server_reactive <- function(.input, .input_name) {
-    glue::glue("
-      {.input_name} <- reactive({{
-        in_range <- if (input${.input_name} <= {.input$max} && input${.input_name} >= {.input$min}) {
-          TRUE
-        } else {
-          FALSE
-        }
-        shinyFeedback::feedbackDanger(ns('{.input_name}'), !in_range,
-        sprintf('Numeric value between %s-%s required', {.input$min}, {.input$max}))
-        req(in_range)
-        input${.input_name}
-      }})
-  ")
-  }
+
 
   output_server <- glue::glue_collapse(
     c(glue::glue("{module_name}Server <- function(id) {{"),

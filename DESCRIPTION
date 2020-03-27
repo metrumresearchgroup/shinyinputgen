@@ -1,7 +1,7 @@
 Package: shinyinputgen
 Type: Package
 Title: Codegen forms with validation
-Version: 0.0.1
+Version: 0.0.2
 Description: Codegen forms with validation.
 Encoding: UTF-8
 LazyData: true

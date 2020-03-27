@@ -1,0 +1,15 @@
+module: physio
+
+molweight:
+  type: numeric
+  label: "molecular weight"
+  value: 0.456
+  min: 0
+  max: 10
+
+lipo:
+  type: numeric
+  label: "lipophilicity"
+  value: 1
+  min: -10
+  max: 10

@@ -1,0 +1,22 @@
+module: pk
+
+vka:
+  type: numeric
+  label: "1st Order Oral Abs rate"
+  value: 0.456
+  min: 0
+  max: 10
+
+vFa:
+  type: numeric
+  label: "Fraction Absorbed"
+  value: 1
+  min: 0
+  max: 1
+
+vCL_Ki:
+  type: numeric
+  label: "Renal Clearance"
+  value: 9.41
+  min: 0
+  max: 50

@@ -15,6 +15,9 @@ Imports:
     magrittr,
     shinyFeedback,
     shiny,
-    yaml
+    yaml,
+    glue,
+    purrr
 Suggests: 
     testthat (>= 2.1.0)
+License: MIT + file LICENSE
